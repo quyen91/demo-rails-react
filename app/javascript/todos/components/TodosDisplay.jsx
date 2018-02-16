@@ -1,36 +1,61 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import queryString from 'query-string';
 import axios from 'axios';
 
 class TodosDisplay extends React.Component {
   constructor () {
     super();
     this.state = {
-      todo: {}
+      todo: {},
+      todoList: []
     };
   }
 
+  componentDidMount() {
+    this.fetchAllTodo();
+  }
 
-  fetchTodo (id) {
-    axios.get('api/v1/todos/${id}')
+  fetchAllTodo() {
+    axios.get('api/v1/todos')
       .then(response => {
-        this.setState({ todo: response.data });
+        this.setState({ todoList: response.data });
       })
       .catch(error => {
         console.error(error);
       });
   }
 
-  render () {
-    const todo = this.state.todo
-
-    return (
-      <div>
-        <p>{todo.name}</p>
-        <p>{quote.status}</p>
-       </div>
-     )
+  handleDelete(id) {
+    axios.delete(`api/v1/todos/${id}`)
+      .then(response => {
+        alert('success')
+      })
+      .catch(error => {
+        console.log(error);
+      });
   }
 
+  handleEdit(){
+
+  }
+
+  renderListTodo() {
+    return (
+      this.state.todoList.map((item) => <div key={item.id}><li>{item.name}</li>
+                                        <button onClick={() => this.handleDelete(item.id)} >Delete</button>
+                                        <button onClick={this.handleEdit(item.id)}> Edit </button></div>)
+
+    )
+  }
+
+  // Render function
+  render () {
+    const todoList = this.state.todoList;
+    return (
+      <div>
+        { this.renderListTodo() }
+      </div>
+    )
+  }
 }
+
+export default TodosDisplay

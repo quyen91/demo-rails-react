@@ -7,5 +7,5 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 
 100.times do |index|
-  Todo.create(name: 'This is task name #{index}')
+  Todo.create(name: "This is task name #{index}")
 end

@@ -1,6 +1,7 @@
 module Api
   module V1
     class TodosController < ApplicationController
+      skip_before_action :verify_authenticity_token
 
       def index
         render json: Todo.all
@@ -13,25 +14,23 @@ module Api
       def create
         @todo = Todo.new resource_params
         if @todo.save
-          respond_to do |format|
-            format.json { render json: @todo }
-          end
+          render json: @todo
         end
       end
 
       def update
         @todo = assign_todo
         if @todo.update resource_params
-          respond_to do |format|
-            format.json { render json: @todo }
-          end
+          render json: @todo
+        else
+          render json: 'Error!'
         end
       end
 
       def destroy
-        respond_with Todo.destroy params[:id]
+        Todo.destroy params[:id]
+        render json: 'Success', status: :ok
       end
-
 
       private
       def resource_params
