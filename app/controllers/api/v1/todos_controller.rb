@@ -1,10 +1,9 @@
 module Api
   module V1
-    class TodosController < ApplicationController
-      skip_before_action :verify_authenticity_token
+    class TodosController < Api::V1::ApplicationController
 
       def index
-        render json: Todo.all
+        render json: Todo.all.limit(10)
       end
 
       def show
@@ -30,6 +29,12 @@ module Api
       def destroy
         Todo.destroy params[:id]
         render json: 'Success', status: :ok
+      end
+
+      def search
+        keyword = params[:keyword]
+        todos = Todo.where("name LIKE ?", "%#{keyword}%").limit(10)
+        render json: todos
       end
 
       private
