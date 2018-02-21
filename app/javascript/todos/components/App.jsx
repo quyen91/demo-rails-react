@@ -1,5 +1,6 @@
 import React from 'react'
 import axios from 'axios';
+import update from 'immutability-helper';
 import PropTypes from 'prop-types'
 import TodoForm from './TodoForm.jsx'
 import TodosDisplay from './TodosDisplay.jsx'
@@ -39,12 +40,21 @@ class App extends React.Component {
       });
   }
 
+  handleAddNewTodo(data) {
+
+    const todos = update(this.state.todoList, {
+      $splice: [[0, 0, data]]
+    });
+
+    this.setState({ todoList: todos });
+  }
+
   render() {
     return(
       <div>
         <TodosSearch />
         <hr/>
-        <TodosNew />
+        <TodosNew handleAddNewTodo={this.handleAddNewTodo.bind(this)}/>
         <hr/>
         <TodosDisplay todoList={this.state.todoList}/>
       </div>

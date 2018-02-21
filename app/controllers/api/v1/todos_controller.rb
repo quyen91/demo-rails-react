@@ -3,7 +3,7 @@ module Api
     class TodosController < Api::V1::ApplicationController
 
       def index
-        render json: Todo.all.limit(10)
+        render json: Todo.all.order(updated_at: :desc).limit(10)
       end
 
       def show
@@ -39,7 +39,7 @@ module Api
 
       private
       def resource_params
-        params.require(:todo).permit(:title, :completed)
+        params.require(:todo).permit(:name)
       end
 
       def assign_todo
