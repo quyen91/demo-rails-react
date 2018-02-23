@@ -5,7 +5,7 @@ class TodosNew extends React.Component {
   constructor (props) {
     super(props);
     this.state = {
-      name: 'default',
+      name: '',
     };
 
     this.handleChange = this.handleChange.bind(this);

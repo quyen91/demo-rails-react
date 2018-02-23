@@ -40,13 +40,39 @@ class App extends React.Component {
       });
   }
 
-  handleAddNewTodo(data) {
-
+  handleAddNewTodo(todo) {
     const todos = update(this.state.todoList, {
-      $splice: [[0, 0, data]]
+      $splice: [[0, 0, todo]]
     });
 
     this.setState({ todoList: todos });
+  }
+
+  handleDeleteTodo(id) {
+    const newTodos = this.state.todoList.filter((todo) => {
+      return todo.id != id;
+    });
+
+    this.setState({ todoList: newTodos});
+  }
+
+  handleUpdate(item){
+    console.log('handle Update in App')
+    axios.put(`api/v1/todos/${item.id}`, {
+        todo: { name: item.name }
+      })
+      .then(response => {
+        this.updateItem(item)
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
+
+  updateItem(todo) {
+    var todos = this.state.todoList.filter((item) => { return item.id != todo.id });
+    todos.push(todo);
+    this.setState({todoList: todos})
   }
 
   render() {
@@ -54,9 +80,11 @@ class App extends React.Component {
       <div>
         <TodosSearch />
         <hr/>
-        <TodosNew handleAddNewTodo={this.handleAddNewTodo.bind(this)}/>
+        <TodosNew handleAddNewTodo={this.handleAddNewTodo.bind(this)} />
         <hr/>
-        <TodosDisplay todoList={this.state.todoList}/>
+        <TodosDisplay todoList={this.state.todoList}
+                      handleDeleteTodo={this.handleDeleteTodo.bind(this)}
+                      onUpdate={this.handleUpdate.bind(this)}/>
       </div>
     )
   }
